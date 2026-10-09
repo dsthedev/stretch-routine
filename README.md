@@ -16,3 +16,5 @@ Requirements: Node.js and pnpm.
 pnpm install
 pnpm dev
 ```
+
+Using a [custom ShadCN UI template](https://ui.shadcn.com/create?template=vite&preset=b5qoyLKSDy): `pnpm dlx shadcn@latest init --preset b5qoyLKSDy --template vite`
