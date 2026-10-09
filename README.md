@@ -2,7 +2,7 @@
 
 A local-first, mobile-friendly stretching guide for flooring and construction work.
 
-[https://mystretchroutine.netlify.app/]([url](https://mystretchroutine.netlify.app/))
+[https://mystretchroutine.netlify.app/](https://mystretchroutine.netlify.app/)
 
 ## Daily flow
 
