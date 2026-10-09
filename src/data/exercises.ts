@@ -219,4 +219,69 @@ export const exercises: Exercise[] = [
         safetyNotes:
             "Hold behind the thigh rather than pulling on the knee. Stop if you feel pain, numbness, or tingling.",
     },
+    {
+        id: "supported-squat-hold",
+        name: "Supported squat hold",
+        category: "knees",
+        instructions:
+            "Stand in front of a stable support and hold it lightly. Bend your knees and hips into a comfortable shallow squat, keeping your heels down. Hold, then stand up slowly.",
+        durationSeconds: 30,
+        purpose: "Practice a comfortable bent-knee position.",
+        muscles: ["Quadriceps", "Gluteals", "Calves"],
+        workActivities: ["Working at floor level", "Repeated bending and kneeling"],
+        safetyNotes:
+            "Use support and stay within a comfortable depth. Stop if you feel pain, numbness, or tingling.",
+    },
+    {
+        id: "straight-knee-calf-stretch",
+        name: "Straight-knee calf stretch",
+        category: "calves",
+        instructions:
+            "Face a wall or stable support. Step one foot back, keep that leg comfortably straight, and gently bend the front knee while keeping the back heel down. Switch sides.",
+        durationSeconds: 40,
+        purpose: "Gently stretch the calf with the back knee straight.",
+        muscles: ["Gastrocnemius", "Soleus"],
+        workActivities: ["Standing for extended periods", "Carrying materials"],
+        safetyNotes:
+            "Keep both feet pointed comfortably forward and do not force the stretch. Stop if you feel pain, numbness, or tingling.",
+    },
+    {
+        id: "bent-knee-soleus-stretch",
+        name: "Bent-knee soleus stretch",
+        category: "calves",
+        instructions:
+            "Face a wall or stable support and step one foot back. Keep the back heel down and gently bend both knees until you feel a mild stretch lower in the back calf. Switch sides.",
+        durationSeconds: 40,
+        purpose: "Gently stretch the lower calf with the knee bent.",
+        muscles: ["Soleus"],
+        workActivities: ["Standing for extended periods", "Moving between kneeling and standing"],
+        safetyNotes:
+            "Keep the movement comfortable and the back heel down. Stop if you feel pain, numbness, or tingling.",
+    },
+    {
+        id: "plantar-fascia-toe-extension-stretch",
+        name: "Plantar fascia/toe extension stretch",
+        category: "feet",
+        instructions:
+            "Sit comfortably and rest one ankle across the opposite thigh. Gently draw the toes back toward the shin until you feel a mild stretch along the sole of the foot. Switch sides.",
+        durationSeconds: 30,
+        purpose: "Gently stretch the sole of the foot and toes.",
+        muscles: ["Plantar fascia", "Toe flexors"],
+        workActivities: ["Standing for extended periods", "Walking on job sites"],
+        safetyNotes:
+            "Use gentle pressure and do not force the toes. Stop if you feel pain, numbness, or tingling.",
+    },
+    {
+        id: "overhead-triceps-stretch",
+        name: "Overhead triceps stretch",
+        category: "arms",
+        instructions:
+            "Raise one arm overhead and bend the elbow so your hand rests behind your head. With the other hand, gently support the raised elbow. Hold comfortably, then switch sides.",
+        durationSeconds: 30,
+        purpose: "Gently stretch the back of the upper arm.",
+        muscles: ["Triceps"],
+        workActivities: ["Reaching overhead", "Handling tools and materials"],
+        safetyNotes:
+            "Keep your neck relaxed and do not pull on the elbow. Stop if you feel pain, numbness, or tingling.",
+    },
 ]
