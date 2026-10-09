@@ -44,9 +44,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     }
 
     return (
-        <AppDataContext.Provider value={{ loadResult, saveData }}>
-            {children}
-        </AppDataContext.Provider>
+        <AppDataContext.Provider value= {{ loadResult, saveData }
+}>
+    { children }
+    </AppDataContext.Provider>
     )
 }
 
