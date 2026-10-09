@@ -1,21 +1,16 @@
-# React + TypeScript + Vite + shadcn/ui
+# Stretch Routine
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+A local-first, mobile-friendly stretching guide for flooring and construction work.
 
-## Adding components
+## Daily flow
 
-To add components to your app, run the following command:
+Follow the routines in order: Morning Prep, Workday Mobility, then Evening Recovery. Progress is saved locally so you can resume during the day. The progress sheet is a reference; reset affects today's progress only and requires confirmation.
 
-```bash
-npx shadcn@latest add button
-```
+## Development
 
-This will place the ui components in the `src/components` directory.
+Requirements: Node.js and pnpm.
 
-## Using components
-
-To use the components in your app, import them as follows:
-
-```tsx
-import { Button } from "@/components/ui/button"
+```sh
+pnpm install
+pnpm dev
 ```

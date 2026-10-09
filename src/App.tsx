@@ -406,7 +406,7 @@ export function App() {
             </SheetContent>
           </Sheet>
         </div>
-                <div
+        <div
           className="mt-2 h-2 overflow-hidden rounded-full bg-muted"
           role="progressbar"
           aria-label="Daily routine progress"
