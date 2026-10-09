@@ -1,10 +1,10 @@
 import { useState } from "react"
 import {
   ArrowLeft,
-  ArrowRight,
   BriefcaseBusiness,
   Check,
   Moon,
+  RotateCcw,
   Sunrise,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
@@ -14,11 +14,57 @@ import { Button } from "@/components/ui/button"
 import { getLocalDateString } from "@/lib/dates"
 import { updateRoutineProgress } from "@/lib/routine-progress"
 import type { RoutineProgress, RoutineStage } from "@/types"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 const STAGE_ICONS: Record<RoutineStage, LucideIcon> = {
   "morning-prep": Sunrise,
   "workday-mobility": BriefcaseBusiness,
   "evening-recovery": Moon,
+}
+
+function ResetTodayDialog({ onReset }: { onReset: () => void }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-destructive hover:text-destructive"
+          />
+        }
+      >
+        <RotateCcw aria-hidden="true" />
+        Reset today
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Reset today’s progress?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This clears completed exercises from all three routines today and
+            returns you to Morning Prep, step 1. Previous days, settings, and
+            your exercise library will not be changed.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction variant="destructive" onClick={onReset}>
+            I Understand, Reset Today
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
 }
 
 export function App() {
@@ -69,13 +115,37 @@ export function App() {
     (routine) => todayRecord?.routines[routine.id]?.status !== "completed",
   )
 
+  function resetTodayProgress() {
+    let resetData = data
+
+    for (const routine of data.routines) {
+      resetData = updateRoutineProgress(resetData, today, routine.id, {
+        status: "not-started",
+        currentExerciseIndex: 0,
+        completedExerciseIds: [],
+      })
+    }
+
+    const result = saveData(resetData)
+
+    setSaveMessage(
+      result.status === "saved"
+        ? ""
+        : "Progress could not be reset. Check browser storage.",
+    )
+  }
+
+
   if (!currentRoutine) {
     return (
       <main className="mx-auto min-h-svh max-w-3xl px-5 py-8 sm:px-8">
         <header className="border-b border-border pb-7">
-          <p className="font-heading text-sm font-semibold tracking-wide text-primary">
-            STRETCH ROUTINE
-          </p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="font-heading text-sm font-semibold tracking-wide text-primary">
+              STRETCH ROUTINE
+            </p>
+            <ResetTodayDialog onReset={resetTodayProgress} />
+          </div>
           <p className="mt-2 text-sm text-muted-foreground">{today}</p>
         </header>
         <section className="mt-12 max-w-xl">
@@ -118,7 +188,6 @@ export function App() {
     ? Math.round((completedExerciseCount / totalExerciseCount) * 100)
     : 0
   const StageIcon = STAGE_ICONS[currentRoutine.stage]
-  const isRoutineStarted = activeProgress.status === "in-progress"
   const isLastExercise = currentExerciseIndex === routineExercises.length - 1
 
   function saveProgress(progress: RoutineProgress) {
@@ -136,22 +205,6 @@ export function App() {
     }
 
     setSaveMessage("Progress could not be saved. Check browser storage.")
-  }
-
-  function startRoutine() {
-    saveProgress({
-      ...activeProgress,
-      status: "in-progress",
-      currentExerciseIndex,
-    })
-  }
-
-  function changeExercise(nextIndex: number) {
-    saveProgress({
-      ...activeProgress,
-      status: "in-progress",
-      currentExerciseIndex: nextIndex,
-    })
   }
 
   function completeExercise() {
@@ -182,6 +235,18 @@ export function App() {
     })
   }
 
+  function goBack() {
+    if (currentExerciseIndex === 0) {
+      return
+    }
+
+    saveProgress({
+      ...activeProgress,
+      status: "in-progress",
+      currentExerciseIndex: currentExerciseIndex - 1,
+    })
+  }
+
   if (!exercise) {
     return (
       <main className="mx-auto min-h-svh max-w-3xl px-5 py-8 sm:px-8">
@@ -198,9 +263,12 @@ export function App() {
   return (
     <main className="mx-auto min-h-svh max-w-3xl px-5 py-8 sm:px-8">
       <header className="border-b border-border pb-6">
-        <p className="font-heading text-sm font-semibold tracking-wide text-primary">
-          STRETCH ROUTINE <span aria-hidden="true">·</span> {today}
-        </p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="font-heading text-sm font-semibold tracking-wide text-primary">
+            STRETCH ROUTINE <span aria-hidden="true">·</span> {today}
+          </p>
+          <ResetTodayDialog onReset={resetTodayProgress} />
+        </div>
         <div className="mt-5 flex items-center gap-3">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
             <StageIcon aria-hidden="true" className="size-5" />
@@ -300,38 +368,28 @@ export function App() {
         </p>
       )}
 
-      {!isRoutineStarted ? (
-        <Button className="mt-6 w-full sm:w-auto" onClick={startRoutine}>
-          Start {currentRoutine.name}
-          <ArrowRight aria-hidden="true" />
+      <div className="mt-8 flex flex-col items-center gap-2">
+        <Button
+          size="lg"
+          className="h-14 w-full max-w-sm text-base"
+          onClick={completeExercise}
+        >
+          <Check aria-hidden="true" />
+          Complete &amp; continue
         </Button>
-      ) : (
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-between">
+
+        {currentExerciseIndex > 0 && (
           <Button
-            variant="outline"
-            disabled={currentExerciseIndex === 0}
-            onClick={() => changeExercise(currentExerciseIndex - 1)}
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground"
+            onClick={goBack}
           >
             <ArrowLeft aria-hidden="true" />
-            Previous
+            Go back
           </Button>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            {!isLastExercise && (
-              <Button
-                variant="outline"
-                onClick={() => changeExercise(currentExerciseIndex + 1)}
-              >
-                Next
-                <ArrowRight aria-hidden="true" />
-              </Button>
-            )}
-            <Button onClick={completeExercise}>
-              <Check aria-hidden="true" />
-              Mark complete
-            </Button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </main>
   )
 
