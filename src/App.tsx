@@ -6,6 +6,9 @@ import {
   Moon,
   RotateCcw,
   Sunrise,
+  CheckCircle2,
+  Circle,
+  ListChecks,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
@@ -25,6 +28,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
 const STAGE_ICONS: Record<RoutineStage, LucideIcon> = {
   "morning-prep": Sunrise,
@@ -70,6 +81,7 @@ function ResetTodayDialog({ onReset }: { onReset: () => void }) {
 export function App() {
   const { loadResult, saveData } = useAppData()
   const [saveMessage, setSaveMessage] = useState("")
+  const [isProgressSheetOpen, setIsProgressSheetOpen] = useState(false)
 
   if (loadResult.status !== "ready") {
     const message =
@@ -282,24 +294,117 @@ export function App() {
             </h1>
           </div>
         </div>
-        <div className="mt-5 flex items-center justify-between gap-4 text-sm text-muted-foreground">
-          <span>Today</span>
-          <span>
-            {completedExerciseCount} of {totalExerciseCount} exercises complete
-          </span>
-        </div>
-        <div
-          className="mt-2 h-2 overflow-hidden rounded-full bg-muted"
-          role="progressbar"
-          aria-label="Daily routine progress"
-          aria-valuemin={0}
-          aria-valuemax={totalExerciseCount}
-          aria-valuenow={completedExerciseCount}
-        >
-          <div
-            className="h-full bg-primary transition-[width]"
-            style={{ width: `${dailyProgressPercent}%` }}
-          />
+        <div className="mt-5 flex items-center justify-between gap-3 text-sm">
+          <span className="text-muted-foreground">Today</span>
+
+          <Sheet
+            open={isProgressSheetOpen}
+            onOpenChange={setIsProgressSheetOpen}
+          >
+            <SheetTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto gap-2 px-2 py-1 text-right"
+                />
+              }
+            >
+              <span>
+                {completedExerciseCount} of {totalExerciseCount} exercises
+              </span>
+              <span className="text-primary">View progress</span>
+              <ListChecks aria-hidden="true" />
+            </SheetTrigger>
+
+            <SheetContent
+              side="right"
+              className="w-full overflow-y-auto sm:max-w-md"
+            >
+              <SheetHeader>
+                <SheetTitle>Today’s progress</SheetTitle>
+                <SheetDescription>
+                  Reference only. Viewing this list does not change your
+                  current exercise.
+                </SheetDescription>
+              </SheetHeader>
+
+              <div className="px-6 pb-8">
+                {data.routines.map((routine) => {
+                  const completedIds = new Set(
+                    todayRecord?.routines[routine.id]?.completedExerciseIds ??
+                    [],
+                  )
+                  const routineExercises = routine.exerciseIds.flatMap((id) => {
+                    const item = data.exerciseLibrary.find(
+                      (exerciseItem) => exerciseItem.id === id,
+                    )
+                    return item ? [item] : []
+                  })
+                  const stageCompletedCount = routineExercises.filter((item) =>
+                    completedIds.has(item.id),
+                  ).length
+
+                  return (
+                    <section
+                      key={routine.id}
+                      aria-labelledby={`progress-${routine.id}`}
+                      className="border-t border-border py-5"
+                    >
+                      <div className="flex items-baseline justify-between gap-3">
+                        <h3
+                          id={`progress-${routine.id}`}
+                          className="font-heading font-semibold"
+                        >
+                          {routine.name}
+                        </h3>
+                        <span className="shrink-0 text-xs text-muted-foreground">
+                          {stageCompletedCount} of {routineExercises.length}
+                        </span>
+                      </div>
+
+                      <ul className="mt-3">
+                        {routineExercises.map((item) => {
+                          const isComplete = completedIds.has(item.id)
+
+                          return (
+                            <li
+                              key={item.id}
+                              className="flex items-center gap-3 py-2"
+                            >
+                              {isComplete ? (
+                                <CheckCircle2
+                                  aria-hidden="true"
+                                  className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400"
+                                />
+                              ) : (
+                                <Circle
+                                  aria-hidden="true"
+                                  className="size-4 shrink-0 text-muted-foreground"
+                                />
+                              )}
+                              <span
+                                className={
+                                  isComplete
+                                    ? "text-sm text-muted-foreground line-through"
+                                    : "text-sm"
+                                }
+                              >
+                                {item.name}
+                              </span>
+                              <span className="sr-only">
+                                {isComplete ? "Completed" : "Not completed"}
+                              </span>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </section>
+                  )
+                })}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
 
