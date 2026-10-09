@@ -406,6 +406,19 @@ export function App() {
             </SheetContent>
           </Sheet>
         </div>
+                <div
+          className="mt-2 h-2 overflow-hidden rounded-full bg-muted"
+          role="progressbar"
+          aria-label="Daily routine progress"
+          aria-valuemin={0}
+          aria-valuemax={totalExerciseCount}
+          aria-valuenow={completedExerciseCount}
+        >
+          <div
+            className="h-full bg-primary transition-[width]"
+            style={{ width: `${dailyProgressPercent}%` }}
+          />
+        </div>
       </header>
 
       <article className="mt-8 border-y border-border py-7">
