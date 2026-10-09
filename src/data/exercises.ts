@@ -154,4 +154,69 @@ export const exercises: Exercise[] = [
         safetyNotes:
             "Keep both feet planted and avoid forcing the bend. Stop if you feel pain, numbness, or tingling.",
     },
+    {
+        id: "half-kneeling-hip-flexor-stretch",
+        name: "Half-kneeling hip-flexor stretch",
+        category: "hips",
+        instructions:
+            "Kneel on one knee with the other foot in front. Keep your torso upright and gently shift your weight forward until you feel a mild stretch at the front of the kneeling-side hip. Switch sides.",
+        durationSeconds: 40,
+        purpose: "Gently stretch the front of the hip after prolonged kneeling or sitting.",
+        muscles: ["Hip flexors", "Rectus femoris"],
+        workActivities: ["Kneeling during installation", "Driving between job sites"],
+        safetyNotes:
+            "Pad the kneeling knee and keep the movement comfortable. Stop if you feel pain, numbness, or tingling.",
+    },
+    {
+        id: "supine-figure-four-stretch",
+        name: "Supine figure-four stretch",
+        category: "hips",
+        instructions:
+            "Lie on your back with knees bent. Rest one ankle across the opposite thigh, then gently draw the uncrossed thigh toward you until you feel a mild stretch. Switch sides.",
+        durationSeconds: 40,
+        purpose: "Gently stretch the muscles around the back of the hip.",
+        muscles: ["Gluteals", "Piriformis"],
+        workActivities: ["Repeated kneeling", "Working in low positions"],
+        safetyNotes:
+            "Keep your head and shoulders relaxed. Stop if you feel pain, numbness, or tingling.",
+    },
+    {
+        id: "butterfly-stretch",
+        name: "Butterfly stretch",
+        category: "hips",
+        instructions:
+            "Sit comfortably and bring the soles of your feet together. Let your knees move outward without pressing them down, and sit upright as you hold.",
+        durationSeconds: 40,
+        purpose: "Gently stretch the inner thighs and hips.",
+        muscles: ["Hip adductors", "Gracilis"],
+        workActivities: ["Repeated kneeling", "Working with a wide stance"],
+        safetyNotes:
+            "Sit on a folded towel if that is more comfortable. Do not push your knees down. Stop if you feel pain, numbness, or tingling.",
+    },
+    {
+        id: "standing-quadriceps-stretch",
+        name: "Standing quadriceps stretch",
+        category: "thighs",
+        instructions:
+            "Stand near a wall or stable support. Bend one knee and hold the ankle or trouser cuff, bringing the heel gently toward your seat. Keep your knees comfortably close, then switch sides.",
+        durationSeconds: 40,
+        purpose: "Gently stretch the front of the thigh.",
+        muscles: ["Quadriceps", "Rectus femoris"],
+        workActivities: ["Kneeling during installation", "Repeated standing and kneeling"],
+        safetyNotes:
+            "Use a stable support for balance and do not force the knee bend. Stop if you feel pain, numbness, or tingling.",
+    },
+    {
+        id: "supine-hamstring-stretch",
+        name: "Supine hamstring stretch",
+        category: "thighs",
+        instructions:
+            "Lie on your back with both knees bent. Bring one thigh toward you and gently straighten that leg until you feel a mild stretch at the back of the thigh. Keep the other leg comfortable, then switch sides.",
+        durationSeconds: 40,
+        purpose: "Gently stretch the back of the thigh.",
+        muscles: ["Hamstrings"],
+        workActivities: ["Repeated bending", "Working in low positions"],
+        safetyNotes:
+            "Hold behind the thigh rather than pulling on the knee. Stop if you feel pain, numbness, or tingling.",
+    },
 ]
