@@ -1,8 +1,15 @@
 import { createDefaultAppData } from "@/lib/default-data"
 import { isAppData } from "@/lib/validation"
-import type { AppData } from "@/types"
+import type { AppData, ThemePreference } from "@/types"
 
 export const APP_DATA_STORAGE_KEY = "stretch-routine:app-data"
+
+const LEGACY_THEME_STORAGE_KEY = "theme"
+const THEME_PREFERENCES: readonly ThemePreference[] = ["dark", "light", "system"]
+
+function isThemePreference(value: string | null): value is ThemePreference {
+    return value !== null && THEME_PREFERENCES.includes(value as ThemePreference)
+}
 
 export type LoadAppDataResult =
     | {
@@ -35,10 +42,26 @@ export function loadAppData(): LoadAppDataResult {
     }
 
     if (rawValue === null) {
+        const data = createDefaultAppData()
+
+        try {
+            const legacyTheme = localStorage.getItem(LEGACY_THEME_STORAGE_KEY)
+
+            if (isThemePreference(legacyTheme)) {
+                data.settings.theme = legacyTheme
+
+                if (saveAppData(data).status === "saved") {
+                    localStorage.removeItem(LEGACY_THEME_STORAGE_KEY)
+                }
+            }
+        } catch (error) {
+            return { status: "unavailable", error }
+        }
+
         return {
             status: "ready",
             source: "default",
-            data: createDefaultAppData(),
+            data,
         }
     }
 

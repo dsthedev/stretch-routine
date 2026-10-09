@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useAppData } from "@/components/app-data-provider"
 
 type Theme = "dark" | "light" | "system"
 type ResolvedTheme = "dark" | "light"
@@ -83,10 +84,10 @@ export function ThemeProvider({
   disableTransitionOnChange = true,
   ...props
 }: ThemeProviderProps) {
+  const { loadResult, saveData } = useAppData()
   const [theme, setThemeState] = React.useState<Theme>(() => {
-    const storedTheme = localStorage.getItem(storageKey)
-    if (isTheme(storedTheme)) {
-      return storedTheme
+    if (loadResult.status === "ready") {
+      return loadResult.data.settings.theme
     }
 
     return defaultTheme
@@ -94,10 +95,21 @@ export function ThemeProvider({
 
   const setTheme = React.useCallback(
     (nextTheme: Theme) => {
-      localStorage.setItem(storageKey, nextTheme)
       setThemeState(nextTheme)
+
+      if (loadResult.status !== "ready") {
+        return
+      }
+
+      saveData({
+        ...loadResult.data,
+        settings: {
+          ...loadResult.data.settings,
+          theme: nextTheme,
+        },
+      })
     },
-    [storageKey]
+    [loadResult, saveData],
   )
 
   const applyTheme = React.useCallback(
@@ -156,19 +168,16 @@ export function ThemeProvider({
         return
       }
 
-      setThemeState((currentTheme) => {
-        const nextTheme =
-          currentTheme === "dark"
-            ? "light"
-            : currentTheme === "light"
-              ? "dark"
-              : getSystemTheme() === "dark"
-                ? "light"
-                : "dark"
+      const nextTheme =
+        theme === "dark"
+          ? "light"
+          : theme === "light"
+            ? "dark"
+            : getSystemTheme() === "dark"
+              ? "light"
+              : "dark"
 
-        localStorage.setItem(storageKey, nextTheme)
-        return nextTheme
-      })
+      setTheme(nextTheme)
     }
 
     window.addEventListener("keydown", handleKeyDown)
@@ -176,7 +185,7 @@ export function ThemeProvider({
     return () => {
       window.removeEventListener("keydown", handleKeyDown)
     }
-  }, [storageKey])
+  }, [theme])
 
   React.useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
